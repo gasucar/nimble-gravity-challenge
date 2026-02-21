@@ -54,6 +54,7 @@ export const JobCard = ({ job, candidate }: Props) => {
         uuid: candidate.uuid,
         jobId: job.id,
         candidateId: candidate.candidateId,
+        applicationId: candidate.applicationId,
         repoUrl: trimmedRepoUrl,
       });
 

@@ -10,6 +10,7 @@ export const applyToJob = async (payload: {
   uuid: string;
   jobId: string;
   candidateId: string;
+  applicationId: string;
   repoUrl: string;
 }) => {
   const { data } = await api.post(
