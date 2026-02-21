@@ -1,73 +1,229 @@
-# React + TypeScript + Vite
+# 🚀 Nimble Gravity Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A technical challenge built with **React + TypeScript + Vite + TailwindCSS**, focused on clean architecture, proper error handling, and a solid user experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 Overview
 
-## React Compiler
+This project allows a candidate to:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Authenticate using their email
+2. Fetch available job positions
+3. Submit a GitHub repository as part of a job application
 
-## Expanding the ESLint configuration
+The application emphasizes:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* Type safety (no `any`)
+* Clean error handling
+* Reusable utilities
+* UX-friendly validation
+* Scalable folder structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🏗 Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* ⚛ **React**
+* 🟦 **TypeScript**
+* ⚡ **Vite**
+* 🎨 **TailwindCSS**
+* 🔔 **React Toastify**
+* 🌐 **Axios**
+
+---
+
+## 🧠 Architecture Decisions
+
+### 1️⃣ Separation of Concerns
+
+The project follows a feature-based structure:
+
+```id="x8k2m1"
+src/
+ ├── features/
+ │    ├── candidate/
+ │    ├── jobs/
+ │
+ ├── shared/
+ │    ├── components/
+ │    ├── utils/
+ │    ├── types/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This allows:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+* Scalability
+* Clear boundaries
+* Easy testing
+* Maintainability
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+### 2️⃣ Centralized Error Handling
+
+We created a reusable helper:
+
+```id="l0p9sn"
+shared/utils/extractAxiosError.ts
 ```
+
+This function:
+
+* Safely narrows `unknown`
+* Avoids `any`
+* Handles:
+
+  * Simple backend errors
+  * Structured validation errors (`fieldErrors`)
+* Returns a clean message for UI usage
+
+This keeps components clean and avoids duplicated logic.
+
+---
+
+### 3️⃣ Type-Safe API Errors
+
+Custom backend error interface:
+
+```ts id="o3mn29"
+export interface ApiErrorResponse {
+  error?: string;
+  details?: {
+    formErrors?: string[];
+    fieldErrors?: Record<string, string[]>;
+  };
+}
+```
+
+This ensures:
+
+* No `any`
+* Predictable error structures
+* Safer Axios narrowing
+
+---
+
+### 4️⃣ UX-Focused Validation
+
+Both email and GitHub repository fields:
+
+* Validate on `onBlur`
+* Show inline error messages
+* Disable submit buttons when invalid
+* Still validate on submit (defensive programming)
+
+Example validations implemented:
+
+* Email format validation
+* GitHub repository URL validation:
+
+  ```
+  https://github.com/username/repository
+  ```
+
+---
+
+### 5️⃣ Toast Feedback System
+
+User feedback is handled via **React Toastify**:
+
+* Success toast on valid submissions
+* Error toast using real backend error messages
+* Centralized error extraction for consistency
+
+---
+
+## ✨ Features
+
+### 🔐 Email Authentication
+
+* Real-time validation (onBlur)
+* Disabled button when invalid
+* Backend error handling
+* Success feedback
+
+---
+
+### 💼 Jobs Listing
+
+* Fetches job list from API
+* Loading & error states handled
+* Rendered dynamically
+
+---
+
+### 📦 Apply to Job
+
+* GitHub repository validation
+* Handles structured backend validation errors
+* Success + error toast feedback
+* Loading state with spinner
+
+---
+
+## 🔎 Error Handling Strategy
+
+All async actions:
+
+* Catch `unknown`
+* Narrow using `axios.isAxiosError`
+* Extract meaningful error message
+* Show via toast
+
+This ensures:
+
+* Consistent UX
+* Clean components
+* Fully typed error flows
+
+---
+
+## 🧪 Defensive Programming
+
+Even if frontend validation is bypassed:
+
+* Backend validation errors are parsed
+* First relevant field error is shown
+* User always receives meaningful feedback
+
+---
+
+## 🚀 Getting Started
+
+```bash id="b4k3v2"
+npm install
+npm run dev
+```
+
+---
+
+## 🎯 Key Highlights
+
+✔ No `any` usage
+✔ Proper Axios error narrowing
+✔ Reusable error extraction helper
+✔ Clean folder structure
+✔ UX-friendly validation
+✔ Scalable architecture
+
+---
+
+## 🧩 Future Improvements
+
+* Global Axios interceptors
+* Unit tests for validation logic
+* Custom `useAsyncAction` hook abstraction
+* Form abstraction layer
+* Accessibility improvements (ARIA attributes)
+
+---
+
+## 👨‍💻 Author
+
+Gaston Rodrigo Gonzalez
+Frontend Developer – React | TypeScript
+
+---
+
+---
