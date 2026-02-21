@@ -13,3 +13,11 @@ export interface Job {
   id: string;
   title: string;
 }
+
+export interface ApiErrorResponse {
+  error?: string;
+  details?: {
+    formErrors?: string[];
+    fieldErrors?: Record<string, string[]>;
+  };
+}
