@@ -21,10 +21,12 @@ export const JobCard = ({ job, candidate }: Props) => {
   const [touched, setTouched] = useState(false);
 
   const validateRepoUrl = (value: string) => {
-    if (!value) return "Repository URL is required";
+
+    const trimmed = value.trim();
+    if (trimmed !== value) return "Repository URL is required";
 
     const isValidGithub =
-      /^https:\/\/github\.com\/[^/\s]+\/[^/\s]+\/?$/.test(value);
+      /^https:\/\/github\.com\/[^/\s]+\/[^/\s]+(?:\.git)?\/?$/.test(trimmed);
 
     if (!isValidGithub)
       return "Please enter a valid GitHub repository URL";
@@ -38,7 +40,8 @@ export const JobCard = ({ job, candidate }: Props) => {
   };
 
   const handleApply = async () => {
-    const validationError = validateRepoUrl(repoUrl);
+    const trimmedRepoUrl = repoUrl.trim();
+    const validationError = validateRepoUrl(trimmedRepoUrl);
     setError(validationError);
     setTouched(true);
 
@@ -51,7 +54,7 @@ export const JobCard = ({ job, candidate }: Props) => {
         uuid: candidate.uuid,
         jobId: job.id,
         candidateId: candidate.candidateId,
-        repoUrl,
+        repoUrl: trimmedRepoUrl,
       });
 
       toast.success("Application submitted successfully 🚀");

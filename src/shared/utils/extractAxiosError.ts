@@ -1,5 +1,3 @@
-// shared/utils/extractAxiosError.ts
-
 import axios from "axios";
 import type { ApiErrorResponse } from "../constants/types";
 
@@ -12,12 +10,10 @@ export function extractAxiosError(error: unknown): string {
 
   if (!data) return "Something went wrong";
 
-  // Caso 1: error simple
   if (data.error) {
     return data.error;
   }
 
-  // Caso 2: field errors
   if (data.details?.fieldErrors) {
     const firstError = Object.values(
       data.details.fieldErrors

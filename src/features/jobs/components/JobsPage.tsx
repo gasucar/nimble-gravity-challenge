@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo} from "react";
 import { useJobs } from "../hooks/useJobs";
 import { JobCard } from "./JobCard";
 import type { Candidate } from "../../../shared/constants/types";
@@ -14,6 +14,11 @@ export const JobsPage = ({ candidate }: Props) => {
   const { jobs, loading, error } = useJobs();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
 
   const jobsPerPage = 6;
 
@@ -37,7 +42,7 @@ export const JobsPage = ({ candidate }: Props) => {
     <div className="mx-auto max-w-6xl space-y-6 p-10">
       <h3 className="text-4xl font-bold text-primary text-center">Available Jobs</h3>
       <p className="text-center text-primary font-medium">Browse and apply to available job opportunities</p>
-      <SearchBar value={search} onChange={setSearch} />
+      <SearchBar value={search} onChange={handleSearchChange} />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {paginatedJobs.map((job) => (

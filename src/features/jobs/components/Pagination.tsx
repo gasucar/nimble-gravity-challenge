@@ -15,6 +15,8 @@ export const Pagination = ({ currentPage, totalPages, onChange }: Props) => {
         return (
           <button
             key={page}
+            aria-current={page === currentPage ? "page" : undefined}
+            type="button"
             onClick={() => onChange(page)}
             className={`rounded-lg px-4 py-2 ${
               page === currentPage
